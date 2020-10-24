@@ -65,30 +65,7 @@ class TodoPageState extends State<TodoPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          var textController = TextEditingController();
-
-          var newTask = await showDialog(context: context, builder: (context) {
-            return AlertDialog(
-              title: Text("Enter your Todo"),
-              content: TextField(
-                controller: textController,
-              ),
-              actions: [
-                OutlineButton(
-                  child: Text("Cancel"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
-                RaisedButton(
-                  child: Text("Create"),
-                  onPressed: () async {
-                    Navigator.of(context).pop(TodoItem(
-                        task: textController.text
-                    ));
-                  })
-              ],
-            );
-          });
+          var newTask = await showTaskCreationDialog(context);
 
           if (newTask != null) {
             setState(() {
@@ -99,6 +76,33 @@ class TodoPageState extends State<TodoPage> {
         child: Icon(Icons.add)
       ),
     );
+  }
+
+  Future showTaskCreationDialog(BuildContext context) {
+    var textController = TextEditingController();
+
+    return showDialog(context: context, builder: (context) {
+          return AlertDialog(
+            title: Text("Enter your Todo"),
+            content: TextField(
+              controller: textController,
+            ),
+            actions: [
+              OutlineButton(
+                child: Text("Cancel"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }),
+              RaisedButton(
+                child: Text("Create"),
+                onPressed: () async {
+                  Navigator.of(context).pop(TodoItem(
+                      task: textController.text
+                  ));
+                })
+            ],
+          );
+        });
   }
 }
 
