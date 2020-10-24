@@ -44,23 +44,24 @@ class TodoPageState extends State<TodoPage> {
         title: Text("My Todo App"),
       ),
       body: Column(
-        children: tasks.asMap().entries.map((e) => TodoItemWidget(task: e.value,
-            onSelect: (bool newVal) {
-              var index = e.key;
-              var task = e.value;
+        children: tasks.asMap().entries.map((e) => TodoItemWidget(
+          task: e.value,
+          onSelect: (bool newVal) {
+            var index = e.key;
+            var task = e.value;
 
-              setState(() {
-                tasks.replaceRange(index, index + 1, [TodoItem(
-                  done: newVal,
-                  task: task.task
-                )]);
-              });
+            setState(() {
+              tasks.replaceRange(index, index + 1, [TodoItem(
+                done: newVal,
+                task: task.task
+              )]);
+            });
         },
-        onDelete: () {
-          setState(() {
-            tasks.remove(e.value);
-          });
-        })).toList(),
+          onDelete: () {
+            setState(() {
+              tasks.remove(e.value);
+            });
+          })).toList(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
