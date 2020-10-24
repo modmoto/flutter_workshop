@@ -78,7 +78,7 @@ class TodoPageState extends State<TodoPage> {
                 OutlineButton(
                   child: Text("Cancel"),
                   onPressed: () {
-
+                    Navigator.of(context).pop();
                   }),
                 RaisedButton(
                   child: Text("Create"),
@@ -88,6 +88,7 @@ class TodoPageState extends State<TodoPage> {
                         task: textController.text
                       ));
                     });
+                    Navigator.of(context).pop();
                   })
               ],
             );
