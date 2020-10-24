@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(CounterApp());
+  runApp(TodoApp());
 }
 
-class CounterApp extends StatelessWidget {
+class TodoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,7 +18,12 @@ class CounterApp extends StatelessWidget {
   }
 }
 
-class TodoPage extends StatelessWidget {
+class TodoPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => TodoPageState();
+}
+
+class TodoPageState extends State<TodoPage> {
   final List<TodoItem> tasks = [
     TodoItem(
       task: "Task 1",
@@ -39,13 +44,37 @@ class TodoPage extends StatelessWidget {
         title: Text("My Todo App"),
       ),
       body: Column(
-        children: tasks.map((e) => TodoItemWidget(task: e.task, done: e.done)).toList(),
+        children: tasks.asMap().entries.map((e) => TodoItemWidget(task: e.value,
+            onSelect: (bool newVal) {
+              var index = e.key;
+              var task = e.value;
+
+              setState(() {
+                tasks.replaceRange(index, index + 1, [TodoItem(
+                  done: newVal,
+                  task: task.task
+                )]);
+              });
+        },
+        onDelete: () {
+          setState(() {
+            tasks.remove(e.value);
+          });
+        })).toList(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          addTask();
+        },
         child: Icon(Icons.add)
       ),
     );
+  }
+
+  void addTask() {
+    setState(() {
+      tasks.add(TodoItem(task: "New Task"));
+    });
   }
 }
 
@@ -57,10 +86,11 @@ class TodoItem {
 }
 
 class TodoItemWidget extends StatelessWidget {
-  final bool done;
-  final String task;
+  final TodoItem task;
+  final ValueChanged<bool> onSelect;
+  final Function onDelete;
 
-  const TodoItemWidget({Key key, this.done, this.task}) : super(key: key);
+  const TodoItemWidget({Key key, this.task, this.onSelect, this.onDelete}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,12 +98,12 @@ class TodoItemWidget extends StatelessWidget {
       padding: EdgeInsets.all(16),
       child: Row(
         children: [
-          if (done)
+          if (task.done)
             Icon(Icons.done),
-          Text(task),
+          Text(task.task),
           Spacer(),
-          Checkbox(value: done, onChanged: (v) {
-          }),
+          Checkbox(value: task.done, onChanged: onSelect),
+          IconButton(icon: Icon(Icons.delete), onPressed: onDelete),
         ],
       )
     );
