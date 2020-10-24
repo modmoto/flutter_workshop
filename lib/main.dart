@@ -65,17 +65,40 @@ class TodoPageState extends State<TodoPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          addTask();
+          var textController = TextEditingController();
+
+          showCollection(context);
+          showDialog(context: context, builder: (context) {
+            return AlertDialog(
+              title: Text("Dialog"),
+              content: TextField(
+                controller: textController,
+              ),
+              actions: [
+                OutlineButton(
+                  child: Text("Cancel"),
+                  onPressed: () {
+
+                  }),
+                RaisedButton(
+                  child: Text("Create"),
+                  onPressed: () {
+                    setState(() {
+                      tasks.add(TodoItem(
+                        task: textController.text
+                      ));
+                    });
+                  })
+              ],
+            );
+          });
         },
         child: Icon(Icons.add)
       ),
     );
   }
 
-  void addTask() {
-    setState(() {
-      tasks.add(TodoItem(task: "New Task"));
-    });
+  void showCollection(BuildContext context) {
   }
 }
 
