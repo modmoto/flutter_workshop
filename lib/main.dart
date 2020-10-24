@@ -8,69 +8,76 @@ class CounterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Todo App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MainPage(title: 'Flutter Lol Home Page'),
+      home: TodoPage(),
     );
   }
 }
 
-class MainPage extends StatefulWidget {
-  MainPage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MainPageState createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+class TodoPage extends StatelessWidget {
+  final List<TodoItem> tasks = [
+    TodoItem(
+      task: "Task 1",
+    ),
+    TodoItem(
+      task: "Task 2",
+    ),
+    TodoItem(
+      task: "Task 3",
+      done: true,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
-        title: Text(widget.title)
+        title: Text("My Todo App"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have mashed de button this many times:',
-            ),
-            Text(
-              'Count: $_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
+      body: Column(
+        children: tasks.map((e) => TodoItemWidget(task: e.task, done: e.done)).toList(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+        onPressed: () {},
+        child: Icon(Icons.add)
       ),
     );
   }
 }
 
-class TodoItem extends StatelessWidget {
+class TodoItem {
+  final bool done;
+  final String task;
+
+  TodoItem({this.done = false, this.task});
+}
+
+class TodoItemWidget extends StatelessWidget {
+  final bool done;
+  final String task;
+
+  const TodoItemWidget({Key key, this.done, this.task}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
+    var col = Padding(
+      padding: EdgeInsets.all(16),
+      child: Row(
+        children: [
+          if (done)
+            Icon(Icons.done),
+          Text(task),
+          Spacer(),
+          Checkbox(value: done, onChanged: (v) {
+          }),
+        ],
+      )
+    );
 
+    return col;
+  }
 }
