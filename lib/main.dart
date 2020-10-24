@@ -64,13 +64,12 @@ class TodoPageState extends State<TodoPage> {
           })).toList(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           var textController = TextEditingController();
 
-          showCollection(context);
-          showDialog(context: context, builder: (context) {
+          var newTask = await showDialog(context: context, builder: (context) {
             return AlertDialog(
-              title: Text("Dialog"),
+              title: Text("Enter your Todo"),
               content: TextField(
                 controller: textController,
               ),
@@ -82,24 +81,24 @@ class TodoPageState extends State<TodoPage> {
                   }),
                 RaisedButton(
                   child: Text("Create"),
-                  onPressed: () {
-                    setState(() {
-                      tasks.add(TodoItem(
+                  onPressed: () async {
+                    Navigator.of(context).pop(TodoItem(
                         task: textController.text
-                      ));
-                    });
-                    Navigator.of(context).pop();
+                    ));
                   })
               ],
             );
           });
+
+          if (newTask != null) {
+            setState(() {
+              tasks.add(newTask);
+            });
+          }
         },
         child: Icon(Icons.add)
       ),
     );
-  }
-
-  void showCollection(BuildContext context) {
   }
 }
 
